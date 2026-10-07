@@ -160,18 +160,24 @@
         }
 
         .logo {
-            width: 60px;
-            height: 60px;
-            background: #1f4e79;
-            color: white;
-            border-radius: 10px;
+            width: 110px;
+            height: 110px;
+            background: white;
+            border-radius: 16px;
             margin: auto;
+            padding: 6px;
+            box-sizing: border-box;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 25px;
-            font-weight: bold;
+            overflow: hidden;
             box-shadow: 0 5px 15px rgba(31,78,121,0.3);
+        }
+
+        .logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .header h1 {
@@ -329,7 +335,9 @@
 
         <div class="header">
 
-            <div class="logo">GCD</div>
+            <div class="logo">
+                <img src="gardner-college-logo.jpg" alt="Gardner College logo">
+            </div>
 
             <h1>GARDNER COLLEGE LIBRARY</h1>
 
@@ -497,12 +505,17 @@
 
 
         /* Login is by username, but Firebase Auth needs an email,
-           so look up the email that's on file for that username. */
+           so look up the email that's on file for that username.
+           This reads the small public "usernames" lookup doc, not
+           the full protected profile in "users". */
 
         async function findEmailByUsername(username) {
 
+            var usernameKey =
+                username.trim().toLowerCase();
+
             var snap =
-                await getDoc(doc(db, "usernames", username.toLowerCase()));
+                await getDoc(doc(db, "usernames", usernameKey));
 
             if (!snap.exists()) {
 
@@ -536,14 +549,9 @@
 
                 }
 
-                var cred =
-                    await signInWithEmailAndPassword(auth, email, password);
+                await signInWithEmailAndPassword(auth, email, password);
 
-                var me =
-                    await getDoc(doc(db, "users", cred.user.uid));
-
-                window.location.href =
-                    (me.exists() && me.data().role === "admin") ? "admin.html" : "dashboard.html";
+                window.location.href = "dashboard.html";
 
             }
 
