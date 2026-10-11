@@ -37,6 +37,11 @@
 <div class="stat-card"><p>My Borrowed Books</p><h2 id="sMine">--</h2><span>Currently borrowed</span></div>
 <div class="stat-card"><p>Due Soon / Overdue</p><h2 id="sDue">--</h2><span>Needs attention</span></div>
 </div>
+<div class="section admin-only" id="regSection" style="display:none">
+<div class="section-header"><div><h2>Registered Students</h2><p id="regCount">Everyone who has created an account.</p></div><a href="admin.html">Manage accounts</a></div>
+<div class="toolbar"><input type="text" id="regQ" placeholder="Search name, student ID, username or email"></div>
+<div class="book-table-container"><table class="book-table"><thead><tr><th>#</th><th>Full Name</th><th>Student ID</th><th>Username</th><th>Email</th><th>Role</th></tr></thead><tbody id="regRows"></tbody></table></div>
+</div>
 <div class="search-area"><div><h2>Find a Book</h2><p>Search for books available in the library.</p></div>
 <div class="search"><input type="text" id="q" placeholder="Search by title or author"><button id="qBtn">Search</button></div></div>
 <div class="section"><div class="section-header"><div><h2>Available Books</h2><p>Books you can borrow right now</p></div><a href="books.html">View All Books</a></div>
@@ -48,6 +53,8 @@
 </div>
 <script type="module">
 import { protectPage } from "./auth.js";
+import { db } from "./firebase-init.js";
+import { collection, getDocs } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { $, el, fillTable, fmt, shortId, loanState, loanBadge, stockBadge, getBooks, getMyLoans, getAllLoans, borrowAndReport, returnLoan, RULES } from "./library.js";
 const profile = await protectPage(false);
 
@@ -78,6 +85,26 @@ async function load() {
 $("q").oninput = renderBooks; $("qBtn").onclick = renderBooks;
 load();
 
+
+/* Registered students list - admins only (the database rules also block students from reading it) */
+if (profile.role === "admin") {
+    $("regSection").style.display = "";
+    let people = [];
+    const renderPeople = () => {
+        const q = $("regQ").value.toLowerCase();
+        const list = people.filter(u => [u.fullname, u.studentid, u.username, u.email].join(" ").toLowerCase().includes(q));
+        fillTable($("regRows"), list.map((u, i) => [i + 1, u.fullname || "---", u.studentid || "---", u.username || "---", u.email || "---", u.role === "admin" ? "Admin" : "Student"]), "No registered accounts found.");
+    };
+    try {
+        const snap = await getDocs(collection(db, "users"));
+        people = snap.docs.map(d => d.data()).sort((a, b) => (a.fullname || "").localeCompare(b.fullname || ""));
+        $("regCount").textContent = people.filter(u => u.role !== "admin").length + " registered student(s), " + people.length + " account(s) in total.";
+        renderPeople();
+    } catch (e) {
+        fillTable($("regRows"), [], "Could not load accounts: " + e.message);
+    }
+    $("regQ").oninput = renderPeople;
+}
 </script>
 </body>
 </html>
