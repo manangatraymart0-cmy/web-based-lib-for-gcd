@@ -133,7 +133,10 @@ function renderUsers() {
             if (!confirm("Delete the account of " + (u.fullname || u.username) + " (" + u.email + ")? They will no longer be able to log in. Their borrowing history is kept.")) return;
             try {
                 await deleteDoc(doc(db, "users", u.uid));
-                if (u.username) await deleteDoc(doc(db, "usernames", u.username.toLowerCase()));
+                if (u.username) {
+                    await deleteDoc(doc(db, "usernames", u.username));
+                    if (u.username.toLowerCase() !== u.username) await deleteDoc(doc(db, "usernames", u.username.toLowerCase()));
+                }
                 await load();
                 alert("Account deleted. To let this email register again, also delete it in Firebase Console > Authentication > Users.");
             } catch (e) { alert("Could not delete: " + e.message); }

@@ -160,26 +160,19 @@
         }
 
         .logo {
-            width: 100px;
-            height: 100px;
-            background: white;
-            border-radius: 16px;
+            width: 60px;
+            height: 60px;
+            background: #1f4e79;
+            color: white;
+            border-radius: 10px;
             margin: auto;
-            padding: 6px;
-            box-sizing: border-box;
 
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
 
-            box-shadow: 0 5px 15px rgba(31,78,121,0.2);
-        }
-
-        .logo img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
+            font-size: 20px;
+            font-weight: bold;
         }
 
         h1 {
@@ -290,7 +283,7 @@
         <div class="header">
 
             <div class="logo">
-                <img src="gardner-college-logo.jpg" alt="Gardner College logo">
+                GCD
             </div>
 
             <h1>Create Student Account</h1>
@@ -352,6 +345,9 @@
                 placeholder="Create a password"
                 required
             >
+            <p style="font-size:12px;color:#777;margin-top:6px;">
+                At least 8 characters, with one capital letter and one symbol such as _ * # @ !
+            </p>
 
 
             <label>Confirm Password</label>
@@ -388,7 +384,7 @@
 
         import { auth, db } from "./firebase-init.js";
         import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
-        import { doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+        import { doc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 
         window.register = async function () {
 
@@ -401,9 +397,6 @@
             var username =
                 document.getElementById("username").value.trim();
 
-            var usernameKey =
-                username.toLowerCase();
-
             var email =
                 document.getElementById("email").value.trim();
 
@@ -412,6 +405,17 @@
 
             var confirm =
                 document.getElementById("confirm").value;
+
+
+            /* Password rules */
+
+            if (password.length < 8 || !/[A-Z]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) {
+
+                alert("Password must be at least 8 characters and include one capital letter and one symbol, such as _ * # @ !");
+
+                return;
+
+            }
 
 
             /* Check passwords */
@@ -425,20 +429,31 @@
             }
 
 
+            var credential = null;
+
             try {
 
-                /* Check if username already exists.
-                   This is a lookup by document ID (fast, and doesn't
-                   need the whole "users" collection to be public). */
+                /* Usernames are case-sensitive: "Maria" and "maria" are
+                   two different usernames. */
 
-                var usernameDocRef =
-                    doc(db, "usernames", usernameKey);
+                var usernameKey =
+                    username;
 
-                var usernameSnap =
-                    await getDoc(usernameDocRef);
+                if (!/^[A-Za-z0-9._-]{3,30}$/.test(usernameKey)) {
+
+                    alert("Username must be 3-30 characters: letters, numbers, dot, dash or underscore.");
+
+                    return;
+
+                }
 
 
-                if (usernameSnap.exists()) {
+                /* Check if username already exists */
+
+                var existingSnap =
+                    await getDoc(doc(db, "usernames", usernameKey));
+
+                if (existingSnap.exists()) {
 
                     alert("Username already exists!");
 
@@ -447,38 +462,35 @@
                 }
 
 
-                /* Registering as "admin" makes that account an admin.
-                   Everyone else is a regular student. */
-
-                var role =
-                    usernameKey === "admin" ? "admin" : "student";
-
-
-                var credential =
+                credential =
                     await createUserWithEmailAndPassword(auth, email, password);
 
 
-                await setDoc(doc(db, "users", credential.user.uid), {
+                /* Every new account is a student. Admin rights can only
+                   be given by editing the user's "role" in the Firebase
+                   console (the security rules block anything else). */
+
+                var batch =
+                    writeBatch(db);
+
+                batch.set(doc(db, "users", credential.user.uid), {
 
                     fullname: fullname,
                     studentid: studentid,
                     username: username,
                     email: email,
-                    role: role
+                    role: "student"
 
                 });
 
-
-                /* Small public record: username -> email/uid only,
-                   used so the login page can find your email without
-                   needing read access to full profile data. */
-
-                await setDoc(usernameDocRef, {
+                batch.set(doc(db, "usernames", usernameKey), {
 
                     email: email,
                     uid: credential.user.uid
 
                 });
+
+                await batch.commit();
 
 
                 alert("Account created successfully!");
@@ -488,6 +500,15 @@
             }
 
             catch (error) {
+
+                /* If the login was created but saving the profile failed,
+                   remove it so the person can try again cleanly. */
+
+                if (credential) {
+
+                    try { await credential.user.delete(); } catch (e) {}
+
+                }
 
                 if (error.code === "auth/email-already-in-use") {
 
