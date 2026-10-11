@@ -120,7 +120,7 @@ export function protectPage(adminOnly) {
             for (var i = 0; i < adminLinks.length; i++) {
 
                 adminLinks[i].style.display =
-                    profile.role === "admin" ? "" : "none";
+                    profile.role === "admin" ? "block" : "none";
 
             }
 

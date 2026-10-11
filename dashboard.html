@@ -88,7 +88,7 @@ load();
 
 /* Registered students list - admins only (the database rules also block students from reading it) */
 if (profile.role === "admin") {
-    $("regSection").style.display = "";
+    $("regSection").style.display = "block";
     let people = [];
     const renderPeople = () => {
         const q = $("regQ").value.toLowerCase();
