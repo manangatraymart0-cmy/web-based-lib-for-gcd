@@ -126,7 +126,19 @@ function renderUsers() {
             try { await sendPasswordResetEmail(auth, u.email); alert("Reset link sent to " + u.email + "."); }
             catch (e) { alert("Could not send: " + e.message); }
         };
-        box.append(edit, reset);
+        const del = el("button", "Delete", "small-btn danger");
+        del.disabled = u.uid === profile.uid;
+        del.onclick = async () => {
+            if (loans.some(l => l.uid === u.uid && l.status === "borrowed")) { alert("This student still has borrowed books. Mark them as returned in the Loans tab first."); return; }
+            if (!confirm("Delete the account of " + (u.fullname || u.username) + " (" + u.email + ")? They will no longer be able to log in. Their borrowing history is kept.")) return;
+            try {
+                await deleteDoc(doc(db, "users", u.uid));
+                if (u.username) await deleteDoc(doc(db, "usernames", u.username.toLowerCase()));
+                await load();
+                alert("Account deleted. To let this email register again, also delete it in Firebase Console > Authentication > Users.");
+            } catch (e) { alert("Could not delete: " + e.message); }
+        };
+        box.append(edit, reset, del);
         return [u.fullname || "---", u.studentid || "---", u.username, u.email, u.role === "admin" ? "Admin" : "Student", box];
     }), "No accounts found.");
 }
