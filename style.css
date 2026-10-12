@@ -1094,3 +1094,16 @@ dialog h2 {
 .modal input, .modal select { width:100%; padding:11px; border:1px solid #d5d9de; border-radius:8px; font-size:14px; }
 .modal input:disabled { background:#f1f6fa; color:#7a899a; }
 .modal-actions { display:flex; justify-content:flex-end; gap:10px; margin-top:22px; }
+
+
+
+
+/* Gardner College logo size */
+.header .college-logo {
+    display: block;
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+    margin: 0 auto 15px;
+    border-radius: 10px;
+}
