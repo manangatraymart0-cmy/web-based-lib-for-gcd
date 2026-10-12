@@ -1100,10 +1100,11 @@ dialog h2 {
 
 /* FIX: Gardner College logo on login page */
 .login-box .header img {
-    width: 75px !important;
-    height: 75px !important;
-    max-width: 100% !important;
+    width: 70px !important;
+    height: 70px !important;
+    max-width: 0% !important;
     object-fit: contain !important;
     display: block !important;
     margin: 0 auto 15px !important;
+    border-radius:10px
 }
