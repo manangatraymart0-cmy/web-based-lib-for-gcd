@@ -1098,12 +1098,12 @@ dialog h2 {
 
 
 
-/* Gardner College logo size */
-.header .college-logo {
-    display: block;
-    width: 75px;
-    height: 75px;
-    object-fit: contain;
-    margin: 0 auto 15px;
-    border-radius: 10px;
+/* FIX: Gardner College logo on login page */
+.login-box .header img {
+    width: 180px !important;
+    height: 180px !important;
+    max-width: 100% !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 0 auto 15px !important;
 }
