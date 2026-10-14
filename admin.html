@@ -40,14 +40,15 @@
 <div class="tabs"><button class="tab-btn active" data-tab="tUsers">Accounts</button><button class="tab-btn" data-tab="tBooks">Books</button><button class="tab-btn" data-tab="tLoans">Loans</button></div>
 
 <div class="section tab-panel" id="tUsers"><div class="section-header"><div><h2>All Accounts</h2><p>Edit wrong info, change roles, or send a password reset link.</p></div></div>
-<div class="toolbar"><input type="text" id="uq" placeholder="Search name, student ID, username or email"></div>
+<div class="toolbar"><input type="text" id="uq" placeholder="Search name, student ID, username or email"><button class="small-btn ghost" id="uCsv">Export CSV</button></div>
 <div class="book-table-container"><table class="book-table"><thead><tr><th>Full Name</th><th>Student ID</th><th>Username</th><th>Email</th><th>Role</th><th>Actions</th></tr></thead><tbody id="uRows"></tbody></table></div></div>
 
 <div class="section tab-panel" id="tBooks" style="display:none"><div class="section-header"><div><h2>Manage Books</h2><p>Add new books and update the catalog.</p></div></div>
-<div class="toolbar"><input id="bT" placeholder="Title"><input id="bA" placeholder="Author"><input id="bC" placeholder="Category"><input id="bN" type="number" min="1" placeholder="Copies"><button class="small-btn" id="bAdd">Add Book</button></div>
+<div class="toolbar"><input id="bT" placeholder="Title"><input id="bA" placeholder="Author"><input id="bC" placeholder="Category"><input id="bN" type="number" min="1" placeholder="Copies"><button class="small-btn" id="bAdd">Add Book</button><button class="small-btn ghost" id="bSample">Load sample books</button><button class="small-btn ghost" id="bCsv">Export CSV</button></div>
 <div class="book-table-container"><table class="book-table"><thead><tr><th>Book ID</th><th>Title</th><th>Author</th><th>Category</th><th>Copies (available / total)</th><th>Actions</th></tr></thead><tbody id="bRows"></tbody></table></div></div>
 
 <div class="section tab-panel" id="tLoans" style="display:none"><div class="section-header"><div><h2>All Loans</h2><p>Mark books as returned when students bring them back.</p></div></div>
+<div class="toolbar"><button class="small-btn ghost" id="lCsv">Export CSV</button></div>
 <div class="book-table-container"><table class="book-table"><thead><tr><th>Student</th><th>Book</th><th>Borrowed</th><th>Due</th><th>Returned</th><th>Status</th><th>Action</th></tr></thead><tbody id="lRows"></tbody></table></div></div>
 
 <div class="modal-bg" id="modal"><div class="modal"><h2 id="mTitle"></h2><div id="mFields"></div>
@@ -61,7 +62,7 @@ import { $, el, fillTable, fmt, shortId, loanState, loanBadge, stockBadge, getBo
 const profile = await protectPage(true);
 
 import { auth, db } from "./firebase-init.js";
-import { collection, getDocs, doc, updateDoc, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
+import { collection, getDocs, doc, updateDoc, addDoc, deleteDoc, writeBatch } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore.js";
 import { sendPasswordResetEmail } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-auth.js";
 
 let users = [], books = [], loans = [];
@@ -194,6 +195,66 @@ function renderLoans() {
         return [l.studentName + (l.studentId ? " (" + l.studentId + ")" : ""), l.title, fmt(l.borrowedAt), fmt(l.dueAt), fmt(l.returnedAt), loanBadge(l), act];
     }), "No loans yet.");
 }
+
+/* ---------- CSV EXPORT (backup / research data) ---------- */
+function downloadCsv(name, header, rows) {
+    const cell = v => {
+        let s = String(v == null ? "" : v);
+        if (/^[=+\-@]/.test(s)) s = "'" + s;
+        return '"' + s.replace(/"/g, '""') + '"';
+    };
+    const text = [header].concat(rows).map(r => r.map(cell).join(",")).join("\r\n");
+    const blob = new Blob(["﻿" + text], { type: "text/csv;charset=utf-8" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name + "-" + new Date().toISOString().slice(0, 10) + ".csv";
+    document.body.append(a); a.click(); a.remove();
+}
+$("uCsv").onclick = () => downloadCsv("accounts", ["Full Name", "Student ID", "Username", "Email", "Role"],
+    users.map(u => [u.fullname, u.studentid, u.username, u.email, u.role]));
+$("bCsv").onclick = () => downloadCsv("books", ["Book ID", "Title", "Author", "Category", "Total Copies", "Available Copies"],
+    books.map(b => [b.id, b.title, b.author, b.category, b.totalCopies, b.availableCopies]));
+$("lCsv").onclick = () => downloadCsv("loans", ["Student", "Student ID", "Book", "Borrowed", "Due", "Returned", "Status"],
+    loans.map(l => [l.studentName, l.studentId, l.title, fmt(l.borrowedAt), fmt(l.dueAt), fmt(l.returnedAt), loanState(l)]));
+
+/* ---------- SAMPLE BOOKS (for testing borrowing) ---------- */
+const SAMPLE_BOOKS = [
+    ["Noli Me Tangere", "Jose Rizal", "Literature", 4],
+    ["El Filibusterismo", "Jose Rizal", "Literature", 4],
+    ["The Little Prince", "Antoine de Saint-Exupery", "Literature", 1],
+    ["To Kill a Mockingbird", "Harper Lee", "Literature", 3],
+    ["1984", "George Orwell", "Literature", 3],
+    ["Animal Farm", "George Orwell", "Literature", 2],
+    ["Introduction to Algorithms", "Thomas H. Cormen", "Computer Science", 2],
+    ["Clean Code", "Robert C. Martin", "Computer Science", 3],
+    ["Database System Concepts", "Abraham Silberschatz", "Computer Science", 3],
+    ["Computer Networking: A Top-Down Approach", "James F. Kurose", "Computer Science", 2],
+    ["JavaScript: The Good Parts", "Douglas Crockford", "Computer Science", 2],
+    ["Head First HTML and CSS", "Elisabeth Robson", "Computer Science", 3],
+    ["A Brief History of Time", "Stephen Hawking", "Science", 3],
+    ["Cosmos", "Carl Sagan", "Science", 2],
+    ["The Selfish Gene", "Richard Dawkins", "Science", 2],
+    ["Calculus", "James Stewart", "Mathematics", 4],
+    ["Principles of Marketing", "Philip Kotler", "Business", 3],
+    ["Rich Dad Poor Dad", "Robert T. Kiyosaki", "Business", 3],
+    ["Research Design", "John W. Creswell", "Research", 3],
+    ["Guns, Germs, and Steel", "Jared Diamond", "History", 2],
+    ["Sapiens: A Brief History of Humankind", "Yuval Noah Harari", "History", 3],
+    ["Atomic Habits", "James Clear", "Self-Help", 3]
+];
+$("bSample").onclick = async () => {
+    const have = new Set(books.map(b => b.title.toLowerCase()));
+    const fresh = SAMPLE_BOOKS.filter(s => !have.has(s[0].toLowerCase()));
+    if (!fresh.length) { alert("All sample books are already in the catalog."); return; }
+    if (!confirm("Add " + fresh.length + " sample books to the catalog? You can edit or delete them later.")) return;
+    try {
+        const batch = writeBatch(db);
+        fresh.forEach(s => batch.set(doc(collection(db, "books")), { title: s[0], author: s[1], category: s[2], totalCopies: s[3], availableCopies: s[3] }));
+        await batch.commit();
+        await load();
+        alert(fresh.length + " sample books added.");
+    } catch (e) { alert("Could not add sample books: " + e.message); }
+};
 
 async function load() {
     const [u, b, l] = await Promise.all([getDocs(collection(db, "users")), getBooks(), getAllLoans()]);
