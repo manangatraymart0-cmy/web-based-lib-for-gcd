@@ -16,11 +16,12 @@
 
         body {
             background: linear-gradient(135deg, #0f2742, #1f4e79, #102a43);
-            height: 100vh;
+            min-height: 100vh;
+            padding: 30px 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -271,12 +272,44 @@
 
 
 
+        /* LIBRARY SCENE BACKGROUND (drawn by library-scene.js) */
+
+        .scene {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+            background: #0a1c36;
+        }
+
+        /* the older floating circles and outlines are replaced by the scene */
+
+        body::before,
+        body::after,
+        .login-box::before,
+        .login-box::after,
+        .register-box::before,
+        .register-box::after {
+            display: none;
+        }
+
+        .login-box,
+        .register-box {
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            max-width: calc(100vw - 32px);
+        }
+
+
     </style>
 
 </head>
 
 
 <body>
+
+    <div class="scene" id="scene"></div>
+
 
     <div class="register-box">
 
@@ -539,6 +572,8 @@
         };
 
     </script>
+
+    <script src="library-scene.js"></script>
 
 </body>
 

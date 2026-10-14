@@ -16,11 +16,12 @@
 
         body {
             background: linear-gradient(135deg, #0f2742, #1f4e79, #102a43);
-            height: 100vh;
+            min-height: 100vh;
+            padding: 24px 16px;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            overflow-x: hidden;
             position: relative;
         }
 
@@ -315,7 +316,7 @@
     margin: -8px 0 4px;
 }
 
-        /* LIBRARY SCENE BACKGROUND (bookshelves) */
+        /* LIBRARY SCENE BACKGROUND (drawn by library-scene.js) */
 
         .scene {
             position: fixed;
@@ -323,106 +324,24 @@
             z-index: 0;
             pointer-events: none;
             overflow: hidden;
+            background: #0a1c36;
         }
 
-        .scene::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: radial-gradient(ellipse at 55% 45%, rgba(15,39,66,0) 20%, rgba(15,39,66,0.55) 100%);
-        }
+        /* the older floating circles and outlines are replaced by the scene */
 
-        .shelf {
-            position: absolute;
-            left: 0;
-            display: flex;
-            align-items: flex-end;
-            gap: 3px;
-            white-space: nowrap;
-        }
-
-        .shelf span {
-            display: block;
-            flex: none;
-            border-radius: 3px 3px 0 0;
-            box-shadow: inset 0 16px 0 rgba(255,255,255,0.20), inset 0 -12px 0 rgba(0,0,0,0.16);
-        }
-
-        .shelf-bottom {
-            bottom: 0;
-            opacity: 0.55;
-            border-bottom: 8px solid rgba(255,255,255,0.25);
-        }
-
-        .shelf-top {
-            top: 0;
-            opacity: 0.32;
-            border-bottom: 8px solid rgba(255,255,255,0.25);
-        }
-
-        /* WELCOME TEXT (wide screens only) */
-
-        .hero {
+        body::before,
+        body::after,
+        .login-box::before,
+        .login-box::after,
+        .register-box::before,
+        .register-box::after {
             display: none;
-            position: relative;
-            z-index: 2;
-            max-width: 430px;
-            margin-right: 90px;
-            color: white;
         }
 
-        .hero small {
-            display: block;
-            letter-spacing: 3px;
-            font-size: 12px;
-            color: #f2c14e;
-            font-weight: bold;
-            margin-bottom: 14px;
-        }
-
-        .hero h2 {
-            font-size: 40px;
-            line-height: 1.15;
-            margin-bottom: 16px;
-        }
-
-        .hero > p {
-            font-size: 16px;
-            line-height: 1.6;
-            color: rgba(255,255,255,0.85);
-            margin-bottom: 26px;
-        }
-
-        .hero ul {
-            list-style: none;
-        }
-
-        .hero li {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 14px;
-            font-size: 15px;
-            color: rgba(255,255,255,0.92);
-        }
-
-        .hero li b {
-            flex: none;
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #f2c14e;
-            color: #0f2742;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-        }
-
-        @media (min-width: 1000px) {
-            .hero {
-                display: block;
-            }
+        .login-box,
+        .register-box {
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            max-width: calc(100vw - 32px);
         }
 
     </style>
@@ -437,16 +356,6 @@
 
     <div class="scene" id="scene"></div>
 
-    <div class="hero">
-        <small>GARDNER COLLEGE LIBRARY</small>
-        <h2>Your school library, online.</h2>
-        <p>Browse the catalog, borrow books and keep track of your due dates, anytime and on any device.</p>
-        <ul>
-            <li><b>&#10003;</b> Search the library's book catalog</li>
-            <li><b>&#10003;</b> Borrow books and see when to return them</li>
-            <li><b>&#10003;</b> Keep a record of everything you borrowed</li>
-        </ul>
-    </div>
 
 
     <div class="login-box">
@@ -717,62 +626,7 @@
     </script>
 
 
-    <script>
-
-        /* Draws the rows of book spines in the background */
-
-        (function () {
-
-            var scene = document.getElementById("scene");
-
-            var colors = ["#2e6da4", "#3aa6a0", "#f2c14e", "#e07a5f", "#6c8ebf", "#8fb8de", "#4f9d8f", "#d9a441"];
-
-            var seed = 7;
-
-            function rnd() {
-                seed = (seed * 9301 + 49297) % 233280;
-                return seed / 233280;
-            }
-
-            function buildRow(className, maxHeight) {
-
-                var row = document.createElement("div");
-
-                row.className = "shelf " + className;
-
-                var width = 0;
-
-                while (width < 2600) {
-
-                    var book = document.createElement("span");
-
-                    var w = 18 + Math.floor(rnd() * 26);
-
-                    book.style.width = w + "px";
-
-                    book.style.height = Math.round(maxHeight * (0.55 + rnd() * 0.45)) + "px";
-
-                    book.style.background = colors[Math.floor(rnd() * colors.length)];
-
-                    row.appendChild(book);
-
-                    width += w + 3;
-
-                }
-
-                scene.appendChild(row);
-
-            }
-
-            var h = window.innerHeight;
-
-            buildRow("shelf-bottom", Math.round(h * 0.30));
-
-            buildRow("shelf-top", Math.round(h * 0.20));
-
-        })();
-
-    </script>
+    <script src="library-scene.js"></script>
 
 </body>
 
