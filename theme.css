@@ -398,6 +398,9 @@ body.dash { background: #f1e0bf repeating-linear-gradient(90deg, rgba(110,65,25,
 }
 
 /* ---------- warm reading room overrides ---------- */
+.dash .brand .small-logo { background: #fbf1dc; padding: 5px; }
+.dash .brand .small-logo img { width: 100%; height: 100%; object-fit: contain; display: block; }
+.dash .brand .small-logo.nologo::after { content: "B"; font-weight: bold; color: #4e2c18; }
 .dash .book-footer button, .dash .borrow-button, .dash .request-button, .dash .tab-btn.active, .dash .small-btn { background: #9b3a2e; }
 .dash .book-footer button:hover, .dash .borrow-button:hover, .dash .request-button:hover, .dash .small-btn:hover { background: #7d2c22; }
 .dash .borrow-button:disabled { background: #d8cdb8; color: #8a7a62; }

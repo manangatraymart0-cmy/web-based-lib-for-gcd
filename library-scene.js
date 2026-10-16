@@ -578,21 +578,6 @@
         }
 
 
-        /* wall clock and bulletin board (wide screens) */
-
-        if (W >= 1000) {
-
-            var ccx = W / 2;
-
-            out += '<circle cx="' + n1(ccx) + '" cy="' + n1(H * 0.12) + '" r="24" fill="#fbf7ee" stroke="#5a3418" stroke-width="5"/>';
-
-            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx) + '" y2="' + n1(H * 0.12 - 14) + '" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>';
-
-            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx + 10) + '" y2="' + n1(H * 0.12 + 5) + '" stroke="#8e2f3a" stroke-width="2.5" stroke-linecap="round"/>';
-
-        }
-
-
         /* crown molding */
 
         out += '<rect x="0" y="0" width="' + W + '" height="12" fill="#5a3418"/>';
