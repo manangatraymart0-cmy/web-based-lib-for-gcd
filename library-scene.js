@@ -38,11 +38,11 @@
     /* ---------- helpers ---------- */
 
     var BOOK_COLORS = [
-        "#d94f4f", "#2f9e6a", "#2f6fc0", "#f2b632", "#27a5b5",
-        "#f28a3c", "#f4e6bf", "#8a63c7", "#5aa0e0", "#e0687a"
+        "#8e2f3a", "#2f5d46", "#25456f", "#d1a23a", "#2b7f7f",
+        "#b5632f", "#e6d6aa", "#5d3f73", "#47607a", "#a8472f"
     ];
 
-    var GOLD = "#ffffff";
+    var GOLD = "#e3b04b";
 
     var seed = 1;
 
@@ -148,7 +148,7 @@
         var iw = w - 16;
         var ih = h - 16;
 
-        out += '<rect x="' + n1(ix) + '" y="' + n1(iy) + '" width="' + n1(iw) + '" height="' + n1(ih) + '" fill="#f3ead2"/>';
+        out += '<rect x="' + n1(ix) + '" y="' + n1(iy) + '" width="' + n1(iw) + '" height="' + n1(ih) + '" fill="#4a2d1a"/>';
 
         var rows = Math.max(1, Math.round(ih / 118));
 
@@ -273,15 +273,15 @@
 
         out += '<path d="M' + n1(x) + " " + n1(bottom) + "V" + n1(bottom - h * 0.1) +
                "Q" + n1(cx) + " " + n1(bottom - h * 0.24) + " " + n1(x + w) + " " + n1(bottom - h * 0.09) +
-               "V" + n1(bottom) + 'Z" fill="#6cc070"/>';
+               "V" + n1(bottom) + 'Z" fill="#7a9a50"/>';
 
-        out += '<line x1="' + n1(cx) + '" y1="' + n1(top) + '" x2="' + n1(cx) + '" y2="' + n1(bottom) + '" stroke="#fbf7ee" stroke-width="4"/>';
+        out += '<line x1="' + n1(cx) + '" y1="' + n1(top) + '" x2="' + n1(cx) + '" y2="' + n1(bottom) + '" stroke="#5a3418" stroke-width="4"/>';
 
-        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" stroke="#fbf7ee" stroke-width="4"/>';
+        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" stroke="#5a3418" stroke-width="4"/>';
 
-        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" stroke="#fbf7ee" stroke-width="4"/>';
+        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" stroke="#5a3418" stroke-width="4"/>';
 
-        out += '<path d="' + shape + '" fill="none" stroke="#fbf7ee" stroke-width="9"/>';
+        out += '<path d="' + shape + '" fill="none" stroke="#5a3418" stroke-width="9"/>';
 
         out += '<rect x="' + n1(x - 9) + '" y="' + n1(bottom) + '" width="' + n1(w + 18) + '" height="10" rx="2" fill="url(#wood)"/>';
 
@@ -342,7 +342,7 @@
 
         var out = "";
 
-        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.78) + '" ry="' + n1(15 * scale) + '" fill="#2f6fc0" opacity="0.75"/>';
+        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.78) + '" ry="' + n1(15 * scale) + '" fill="#7a2230" opacity="0.8"/>';
 
         out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.62) + '" ry="' + n1(10 * scale) + '" fill="none" stroke="' + GOLD + '" stroke-width="1.5" opacity="0.7"/>';
 
@@ -354,7 +354,7 @@
 
         /* stack of books */
 
-        var colors = ["#2f6fc0", "#d94f4f", "#2f9e6a"];
+        var colors = ["#25456f", "#8e2f3a", "#2f5d46"];
 
         for (var i = 0; i < 3; i++) {
 
@@ -462,14 +462,14 @@
         out += '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + " " + H + '">';
 
         out += "<defs>" +
-               '<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f1df"/><stop offset="1" stop-color="#d9e8f5"/></linearGradient>' +
-               '<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8a569"/><stop offset="1" stop-color="#b57d44"/></linearGradient>' +
-               '<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b98a"/><stop offset="1" stop-color="#b8935f"/></linearGradient>' +
-               '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa8ee"/><stop offset="1" stop-color="#bfe6fb"/></linearGradient>' +
+               '<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9d3a6"/><stop offset="1" stop-color="#cfa56f"/></linearGradient>' +
+               '<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a5f33"/><stop offset="1" stop-color="#6b3d1e"/></linearGradient>' +
+               '<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a9703f"/><stop offset="1" stop-color="#6e4222"/></linearGradient>' +
+               '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8fc4e8"/><stop offset="1" stop-color="#f8e2b0"/></linearGradient>' +
                '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c2" stop-opacity="0.45"/><stop offset="1" stop-color="#fff6c2" stop-opacity="0"/></linearGradient>' +
                '<radialGradient id="lampGlow"><stop offset="0" stop-color="#fff0b0" stop-opacity="0.35"/><stop offset="0.5" stop-color="#ffe9a0" stop-opacity="0.1"/><stop offset="1" stop-color="#ffc25a" stop-opacity="0"/></radialGradient>' +
                '<radialGradient id="globeFill" cx="0.35" cy="0.3"><stop offset="0" stop-color="#5aa0e0"/><stop offset="1" stop-color="#1d4f91"/></radialGradient>' +
-               '<radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75"><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#2a4a6a" stop-opacity="0.22"/></radialGradient>' +
+               '<radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75"><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#3a1f0c" stop-opacity="0.38"/></radialGradient>' +
                "</defs>";
 
         out += '<rect width="' + W + '" height="' + H + '" fill="url(#wall)"/>';
@@ -487,6 +487,20 @@
 
         }
 
+
+        /* wooden wainscot panelling on the lower wall */
+
+        var wTop = Math.round(floorY - Math.min(H * 0.26, 210));
+
+        out += '<rect x="0" y="' + wTop + '" width="' + W + '" height="' + (floorY - wTop) + '" fill="#8b5a30" opacity="0.55"/>';
+
+        out += '<rect x="0" y="' + wTop + '" width="' + W + '" height="7" fill="url(#wood)"/>';
+
+        for (var pn = 0; pn * 120 < W; pn++) {
+
+            out += '<rect x="' + (pn * 120 + 14) + '" y="' + (wTop + 18) + '" width="92" height="' + (floorY - wTop - 34) + '" rx="3" fill="none" stroke="#3a1f0c" stroke-opacity="0.35" stroke-width="2"/>';
+
+        }
 
         var card = Math.min(W / 2, 232);
 
@@ -564,44 +578,24 @@
         }
 
 
-        /* pennant bunting across the top */
-
-        var flags = ["#d94f4f", "#f2b632", "#2f9e6a", "#2f6fc0", "#f28a3c", "#8a63c7"];
-
-        var fw = Math.max(26, Math.min(40, W / 24));
-
-        out += '<path d="M0 18Q' + n1(W / 2) + " " + n1(18 + Math.min(40, H * 0.05)) + " " + W + ' 18" fill="none" stroke="#8a6a3f" stroke-width="1.5"/>';
-
-        for (var fl = 0; fl * fw * 1.25 < W; fl++) {
-
-            var fx = fl * fw * 1.25 + fw * 0.4;
-
-            var t = fx / W;
-
-            var fy = 18 + 2 * t * (1 - t) * Math.min(40, H * 0.05);
-
-            out += '<polygon points="' + n1(fx) + "," + n1(fy) + " " + n1(fx + fw) + "," + n1(fy) + " " + n1(fx + fw / 2) + "," + n1(fy + fw * 1.1) + '" fill="' + flags[fl % flags.length] + '"/>';
-
-        }
-
         /* wall clock and bulletin board (wide screens) */
 
         if (W >= 1000) {
 
             var ccx = W / 2;
 
-            out += '<circle cx="' + n1(ccx) + '" cy="' + n1(H * 0.12) + '" r="24" fill="#fbf7ee" stroke="#2f6fc0" stroke-width="5"/>';
+            out += '<circle cx="' + n1(ccx) + '" cy="' + n1(H * 0.12) + '" r="24" fill="#fbf7ee" stroke="#5a3418" stroke-width="5"/>';
 
             out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx) + '" y2="' + n1(H * 0.12 - 14) + '" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>';
 
-            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx + 10) + '" y2="' + n1(H * 0.12 + 5) + '" stroke="#d94f4f" stroke-width="2.5" stroke-linecap="round"/>';
+            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx + 10) + '" y2="' + n1(H * 0.12 + 5) + '" stroke="#8e2f3a" stroke-width="2.5" stroke-linecap="round"/>';
 
         }
 
 
         /* crown molding */
 
-        out += '<rect x="0" y="0" width="' + W + '" height="12" fill="#fbf7ee"/>';
+        out += '<rect x="0" y="0" width="' + W + '" height="12" fill="#5a3418"/>';
 
         out += '<rect width="' + W + '" height="' + H + '" fill="url(#vignette)"/>';
 
