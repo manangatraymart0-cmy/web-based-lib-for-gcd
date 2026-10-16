@@ -27,7 +27,8 @@
         "@keyframes sceneGlow { 0%,100% { opacity: .8; } 50% { opacity: 1; } }" +
         ".scene .mote { animation: sceneDrift 12s linear infinite; }" +
         "@keyframes sceneDrift { 0% { transform: translateY(0); opacity: 0; } 15% { opacity: .7; } 100% { transform: translateY(-80px); opacity: 0; } }" +
-        ".scene .star { animation: sceneTwinkle 3s ease-in-out infinite; }" +
+        ".scene .cloud { animation: sceneCloud 14s ease-in-out infinite; }" +
+        "@keyframes sceneCloud { 0%,100% { transform: translateX(-4px); } 50% { transform: translateX(5px); } }" +
         "@keyframes sceneTwinkle { 0%,100% { opacity: .3; } 50% { opacity: 1; } }" +
         "@media (prefers-reduced-motion: reduce) { .scene * { animation: none !important; } }";
 
@@ -37,11 +38,11 @@
     /* ---------- helpers ---------- */
 
     var BOOK_COLORS = [
-        "#7a2c3b", "#2f6b55", "#234a7d", "#c9973a", "#2f8f8f",
-        "#b5573a", "#d9c9a3", "#5b3a6b", "#4a5d73", "#9c4a2f"
+        "#d94f4f", "#2f9e6a", "#2f6fc0", "#f2b632", "#27a5b5",
+        "#f28a3c", "#f4e6bf", "#8a63c7", "#5aa0e0", "#e0687a"
     ];
 
-    var GOLD = "#e6c36a";
+    var GOLD = "#ffffff";
 
     var seed = 1;
 
@@ -93,7 +94,7 @@
 
         var out = "";
 
-        out += '<path d="M' + n1(x + 4) + " " + n1(baseY - 16) + "h20l-3 16h-14z" + '" fill="#b5573a"/>';
+        out += '<path d="M' + n1(x + 4) + " " + n1(baseY - 16) + "h20l-3 16h-14z" + '" fill="#e07a3c"/>';
 
         out += '<ellipse cx="' + n1(x + 8) + '" cy="' + n1(baseY - 26) + '" rx="6" ry="13" fill="#2f8f6a" transform="rotate(-28 ' + n1(x + 8) + " " + n1(baseY - 26) + ')"/>';
 
@@ -147,7 +148,7 @@
         var iw = w - 16;
         var ih = h - 16;
 
-        out += '<rect x="' + n1(ix) + '" y="' + n1(iy) + '" width="' + n1(iw) + '" height="' + n1(ih) + '" fill="#07111f"/>';
+        out += '<rect x="' + n1(ix) + '" y="' + n1(iy) + '" width="' + n1(iw) + '" height="' + n1(ih) + '" fill="#f3ead2"/>';
 
         var rows = Math.max(1, Math.round(ih / 118));
 
@@ -244,13 +245,15 @@
 
         out += '<path d="' + shape + '" fill="url(#sky)"/>';
 
-        for (var i = 0; i < 7; i++) {
+        for (var i = 0; i < 3; i++) {
 
-            var sx = x + 8 + rnd() * (w - 16);
+            var sx = x + 14 + rnd() * (w - 28);
 
-            var sy = bodyTop - rad * 0.55 + rnd() * (h * 0.5);
+            var sy = bodyTop - rad * 0.4 + rnd() * (h * 0.35);
 
-            out += '<circle class="star" cx="' + n1(sx) + '" cy="' + n1(sy) + '" r="' + n1(0.8 + rnd() * 1.2) + '" fill="#fff" style="animation-delay:' + n1(rnd() * 3) + 's"/>';
+            var cw = 12 + rnd() * 10;
+
+            out += '<g class="cloud" style="animation-delay:' + n1(rnd() * 4) + 's" fill="#fff" opacity="0.92"><ellipse cx="' + n1(sx) + '" cy="' + n1(sy) + '" rx="' + n1(cw) + '" ry="' + n1(cw * 0.42) + '"/><ellipse cx="' + n1(sx + cw * 0.5) + '" cy="' + n1(sy - cw * 0.25) + '" rx="' + n1(cw * 0.6) + '" ry="' + n1(cw * 0.4) + '"/></g>';
 
         }
 
@@ -260,25 +263,25 @@
 
             var my = bodyTop - rad * 0.05;
 
-            out += '<circle cx="' + n1(mx) + '" cy="' + n1(my) + '" r="' + n1(w * 0.26) + '" fill="#f6edc8" opacity="0.14"/>';
+            out += '<circle cx="' + n1(mx) + '" cy="' + n1(my) + '" r="' + n1(w * 0.26) + '" fill="#fff3a8" opacity="0.45"/>';
 
-            out += '<circle cx="' + n1(mx) + '" cy="' + n1(my) + '" r="' + n1(w * 0.13) + '" fill="#f6edc8"/>';
+            out += '<circle cx="' + n1(mx) + '" cy="' + n1(my) + '" r="' + n1(w * 0.13) + '" fill="#ffd23f"/>';
 
-            out += '<circle cx="' + n1(mx + w * 0.05) + '" cy="' + n1(my - w * 0.02) + '" r="' + n1(w * 0.11) + '" fill="#13295a" opacity="0.35"/>';
+            
 
         }
 
         out += '<path d="M' + n1(x) + " " + n1(bottom) + "V" + n1(bottom - h * 0.1) +
                "Q" + n1(cx) + " " + n1(bottom - h * 0.24) + " " + n1(x + w) + " " + n1(bottom - h * 0.09) +
-               "V" + n1(bottom) + 'Z" fill="#081530"/>';
+               "V" + n1(bottom) + 'Z" fill="#6cc070"/>';
 
-        out += '<line x1="' + n1(cx) + '" y1="' + n1(top) + '" x2="' + n1(cx) + '" y2="' + n1(bottom) + '" stroke="#2b1a10" stroke-width="4"/>';
+        out += '<line x1="' + n1(cx) + '" y1="' + n1(top) + '" x2="' + n1(cx) + '" y2="' + n1(bottom) + '" stroke="#fbf7ee" stroke-width="4"/>';
 
-        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" stroke="#2b1a10" stroke-width="4"/>';
+        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.4) + '" stroke="#fbf7ee" stroke-width="4"/>';
 
-        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" stroke="#2b1a10" stroke-width="4"/>';
+        out += '<line x1="' + n1(x) + '" y1="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" x2="' + n1(x + w) + '" y2="' + n1(bodyTop + (bottom - bodyTop) * 0.75) + '" stroke="#fbf7ee" stroke-width="4"/>';
 
-        out += '<path d="' + shape + '" fill="none" stroke="#6a4529" stroke-width="9"/>';
+        out += '<path d="' + shape + '" fill="none" stroke="#fbf7ee" stroke-width="9"/>';
 
         out += '<rect x="' + n1(x - 9) + '" y="' + n1(bottom) + '" width="' + n1(w + 18) + '" height="10" rx="2" fill="url(#wood)"/>';
 
@@ -312,11 +315,11 @@
 
         var out = '<g class="sway" style="transform-origin:' + n1(cx) + "px 0px;animation-delay:" + delay + 's">';
 
-        out += '<line x1="' + n1(cx) + '" y1="0" x2="' + n1(cx) + '" y2="' + n1(cord) + '" stroke="#0b0b0b" stroke-width="2"/>';
+        out += '<line x1="' + n1(cx) + '" y1="0" x2="' + n1(cx) + '" y2="' + n1(cord) + '" stroke="#6b5a45" stroke-width="2"/>';
 
         out += '<circle class="glow" cx="' + n1(cx) + '" cy="' + n1(lipY + 8) + '" r="' + n1(130 * scale) + '" fill="url(#lampGlow)"/>';
 
-        out += '<path d="M' + n1(cx - sw) + " " + n1(lipY) + "Q" + n1(cx) + " " + n1(cord - 16 * scale) + " " + n1(cx + sw) + " " + n1(lipY) + 'Z" fill="#c9973a"/>';
+        out += '<path d="M' + n1(cx - sw) + " " + n1(lipY) + "Q" + n1(cx) + " " + n1(cord - 16 * scale) + " " + n1(cx + sw) + " " + n1(lipY) + 'Z" fill="#2f8a5b"/>';
 
         out += '<path d="M' + n1(cx - sw) + " " + n1(lipY) + "Q" + n1(cx - sw * 0.2) + " " + n1(cord - 6 * scale) + " " + n1(cx) + " " + n1(cord - 12 * scale) + "Q" + n1(cx - sw * 0.6) + " " + n1(cord + 4 * scale) + " " + n1(cx - sw) + " " + n1(lipY) + 'Z" fill="#fff" opacity="0.18"/>';
 
@@ -339,19 +342,19 @@
 
         var out = "";
 
-        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.78) + '" ry="' + n1(15 * scale) + '" fill="#7a2c3b" opacity="0.7"/>';
+        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.78) + '" ry="' + n1(15 * scale) + '" fill="#2f6fc0" opacity="0.75"/>';
 
         out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY + 6 * scale) + '" rx="' + n1(w * 0.62) + '" ry="' + n1(10 * scale) + '" fill="none" stroke="' + GOLD + '" stroke-width="1.5" opacity="0.7"/>';
 
-        out += '<rect x="' + n1(cx - w / 2 + 10 * scale) + '" y="' + n1(topY) + '" width="' + n1(8 * scale) + '" height="' + n1(baseY - topY) + '" fill="#2b1a10"/>';
+        out += '<rect x="' + n1(cx - w / 2 + 10 * scale) + '" y="' + n1(topY) + '" width="' + n1(8 * scale) + '" height="' + n1(baseY - topY) + '" fill="#8a5a30"/>';
 
-        out += '<rect x="' + n1(cx + w / 2 - 18 * scale) + '" y="' + n1(topY) + '" width="' + n1(8 * scale) + '" height="' + n1(baseY - topY) + '" fill="#2b1a10"/>';
+        out += '<rect x="' + n1(cx + w / 2 - 18 * scale) + '" y="' + n1(topY) + '" width="' + n1(8 * scale) + '" height="' + n1(baseY - topY) + '" fill="#8a5a30"/>';
 
         out += '<rect x="' + n1(cx - w / 2) + '" y="' + n1(topY) + '" width="' + n1(w) + '" height="' + n1(12 * scale) + '" rx="3" fill="url(#wood)"/>';
 
         /* stack of books */
 
-        var colors = ["#234a7d", "#7a2c3b", "#2f6b55"];
+        var colors = ["#2f6fc0", "#d94f4f", "#2f9e6a"];
 
         for (var i = 0; i < 3; i++) {
 
@@ -375,11 +378,11 @@
 
         out += '<circle class="glow" cx="' + n1(lx) + '" cy="' + n1(topY - 46 * scale) + '" r="' + n1(95 * scale) + '" fill="url(#lampGlow)"/>';
 
-        out += '<rect x="' + n1(lx - 2 * scale) + '" y="' + n1(topY - 34 * scale) + '" width="' + n1(4 * scale) + '" height="' + n1(34 * scale) + '" fill="#8a6a2b"/>';
+        out += '<rect x="' + n1(lx - 2 * scale) + '" y="' + n1(topY - 34 * scale) + '" width="' + n1(4 * scale) + '" height="' + n1(34 * scale) + '" fill="#8a8f98"/>';
 
-        out += '<ellipse cx="' + n1(lx) + '" cy="' + n1(topY) + '" rx="' + n1(13 * scale) + '" ry="' + n1(3 * scale) + '" fill="#8a6a2b"/>';
+        out += '<ellipse cx="' + n1(lx) + '" cy="' + n1(topY) + '" rx="' + n1(13 * scale) + '" ry="' + n1(3 * scale) + '" fill="#8a8f98"/>';
 
-        out += '<path d="M' + n1(lx - 22 * scale) + " " + n1(topY - 32 * scale) + "l" + n1(10 * scale) + " " + n1(-26 * scale) + "h" + n1(24 * scale) + "l" + n1(10 * scale) + " " + n1(26 * scale) + 'z" fill="#d9a441"/>';
+        out += '<path d="M' + n1(lx - 22 * scale) + " " + n1(topY - 32 * scale) + "l" + n1(10 * scale) + " " + n1(-26 * scale) + "h" + n1(24 * scale) + "l" + n1(10 * scale) + " " + n1(26 * scale) + 'z" fill="#2f8a5b"/>';
 
         return out;
 
@@ -396,9 +399,9 @@
 
         var out = "";
 
-        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY) + '" rx="' + n1(26 * scale) + '" ry="' + n1(6 * scale) + '" fill="#2b1a10"/>';
+        out += '<ellipse cx="' + n1(cx) + '" cy="' + n1(baseY) + '" rx="' + n1(26 * scale) + '" ry="' + n1(6 * scale) + '" fill="#8a5a30"/>';
 
-        out += '<rect x="' + n1(cx - 3 * scale) + '" y="' + n1(cy + r) + '" width="' + n1(6 * scale) + '" height="' + n1(baseY - cy - r) + '" fill="#2b1a10"/>';
+        out += '<rect x="' + n1(cx - 3 * scale) + '" y="' + n1(cy + r) + '" width="' + n1(6 * scale) + '" height="' + n1(baseY - cy - r) + '" fill="#8a5a30"/>';
 
         out += '<circle cx="' + n1(cx) + '" cy="' + n1(cy) + '" r="' + n1(r) + '" fill="url(#globeFill)"/>';
 
@@ -421,9 +424,9 @@
 
         var out = "";
 
-        out += '<line x1="' + n1(x) + '" y1="' + n1(topY) + '" x2="' + n1(x + 26) + '" y2="' + n1(floorY) + '" stroke="#7a5230" stroke-width="5" stroke-linecap="round"/>';
+        out += '<line x1="' + n1(x) + '" y1="' + n1(topY) + '" x2="' + n1(x + 26) + '" y2="' + n1(floorY) + '" stroke="#b9854d" stroke-width="5" stroke-linecap="round"/>';
 
-        out += '<line x1="' + n1(x + 34) + '" y1="' + n1(topY) + '" x2="' + n1(x + 60) + '" y2="' + n1(floorY) + '" stroke="#7a5230" stroke-width="5" stroke-linecap="round"/>';
+        out += '<line x1="' + n1(x + 34) + '" y1="' + n1(topY) + '" x2="' + n1(x + 60) + '" y2="' + n1(floorY) + '" stroke="#b9854d" stroke-width="5" stroke-linecap="round"/>';
 
         var steps = Math.floor((floorY - topY) / 34);
 
@@ -433,7 +436,7 @@
 
             var y = topY + (floorY - topY) * t;
 
-            out += '<line x1="' + n1(x + 26 * t) + '" y1="' + n1(y) + '" x2="' + n1(x + 34 + 26 * t) + '" y2="' + n1(y) + '" stroke="#7a5230" stroke-width="4" stroke-linecap="round"/>';
+            out += '<line x1="' + n1(x + 26 * t) + '" y1="' + n1(y) + '" x2="' + n1(x + 34 + 26 * t) + '" y2="' + n1(y) + '" stroke="#b9854d" stroke-width="4" stroke-linecap="round"/>';
 
         }
 
@@ -459,14 +462,14 @@
         out += '<svg xmlns="http://www.w3.org/2000/svg" width="' + W + '" height="' + H + '" viewBox="0 0 ' + W + " " + H + '">';
 
         out += "<defs>" +
-               '<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1c36"/><stop offset="1" stop-color="#18436d"/></linearGradient>' +
-               '<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a4529"/><stop offset="1" stop-color="#3a2314"/></linearGradient>' +
-               '<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2d1b12"/><stop offset="1" stop-color="#0f0806"/></linearGradient>' +
-               '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0d1c46"/><stop offset="1" stop-color="#355f9e"/></linearGradient>' +
-               '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0ff" stop-opacity="0.26"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></linearGradient>' +
-               '<radialGradient id="lampGlow"><stop offset="0" stop-color="#ffd67a" stop-opacity="0.6"/><stop offset="0.5" stop-color="#ffc25a" stop-opacity="0.18"/><stop offset="1" stop-color="#ffc25a" stop-opacity="0"/></radialGradient>' +
+               '<linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7f1df"/><stop offset="1" stop-color="#d9e8f5"/></linearGradient>' +
+               '<linearGradient id="wood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8a569"/><stop offset="1" stop-color="#b57d44"/></linearGradient>' +
+               '<linearGradient id="floor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9b98a"/><stop offset="1" stop-color="#b8935f"/></linearGradient>' +
+               '<linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4aa8ee"/><stop offset="1" stop-color="#bfe6fb"/></linearGradient>' +
+               '<linearGradient id="beam" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6c2" stop-opacity="0.45"/><stop offset="1" stop-color="#fff6c2" stop-opacity="0"/></linearGradient>' +
+               '<radialGradient id="lampGlow"><stop offset="0" stop-color="#fff0b0" stop-opacity="0.35"/><stop offset="0.5" stop-color="#ffe9a0" stop-opacity="0.1"/><stop offset="1" stop-color="#ffc25a" stop-opacity="0"/></radialGradient>' +
                '<radialGradient id="globeFill" cx="0.35" cy="0.3"><stop offset="0" stop-color="#5aa0e0"/><stop offset="1" stop-color="#1d4f91"/></radialGradient>' +
-               '<radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75"><stop offset="0.45" stop-color="#050c18" stop-opacity="0"/><stop offset="1" stop-color="#050c18" stop-opacity="0.6"/></radialGradient>' +
+               '<radialGradient id="vignette" cx="0.5" cy="0.5" r="0.75"><stop offset="0.5" stop-color="#ffffff" stop-opacity="0"/><stop offset="1" stop-color="#2a4a6a" stop-opacity="0.22"/></radialGradient>' +
                "</defs>";
 
         out += '<rect width="' + W + '" height="' + H + '" fill="url(#wall)"/>';
@@ -480,7 +483,7 @@
 
         for (var p = 1; p <= 2; p++) {
 
-            out += '<line x1="0" y1="' + n1(floorY + (H - floorY) * p / 3) + '" x2="' + W + '" y2="' + n1(floorY + (H - floorY) * p / 3) + '" stroke="#000" stroke-opacity="0.35"/>';
+            out += '<line x1="0" y1="' + n1(floorY + (H - floorY) * p / 3) + '" x2="' + W + '" y2="' + n1(floorY + (H - floorY) * p / 3) + '" stroke="#7a5a30" stroke-opacity="0.35"/>';
 
         }
 
@@ -561,9 +564,44 @@
         }
 
 
+        /* pennant bunting across the top */
+
+        var flags = ["#d94f4f", "#f2b632", "#2f9e6a", "#2f6fc0", "#f28a3c", "#8a63c7"];
+
+        var fw = Math.max(26, Math.min(40, W / 24));
+
+        out += '<path d="M0 18Q' + n1(W / 2) + " " + n1(18 + Math.min(40, H * 0.05)) + " " + W + ' 18" fill="none" stroke="#8a6a3f" stroke-width="1.5"/>';
+
+        for (var fl = 0; fl * fw * 1.25 < W; fl++) {
+
+            var fx = fl * fw * 1.25 + fw * 0.4;
+
+            var t = fx / W;
+
+            var fy = 18 + 2 * t * (1 - t) * Math.min(40, H * 0.05);
+
+            out += '<polygon points="' + n1(fx) + "," + n1(fy) + " " + n1(fx + fw) + "," + n1(fy) + " " + n1(fx + fw / 2) + "," + n1(fy + fw * 1.1) + '" fill="' + flags[fl % flags.length] + '"/>';
+
+        }
+
+        /* wall clock and bulletin board (wide screens) */
+
+        if (W >= 1000) {
+
+            var ccx = W / 2;
+
+            out += '<circle cx="' + n1(ccx) + '" cy="' + n1(H * 0.12) + '" r="24" fill="#fbf7ee" stroke="#2f6fc0" stroke-width="5"/>';
+
+            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx) + '" y2="' + n1(H * 0.12 - 14) + '" stroke="#333" stroke-width="2.5" stroke-linecap="round"/>';
+
+            out += '<line x1="' + n1(ccx) + '" y1="' + n1(H * 0.12) + '" x2="' + n1(ccx + 10) + '" y2="' + n1(H * 0.12 + 5) + '" stroke="#d94f4f" stroke-width="2.5" stroke-linecap="round"/>';
+
+        }
+
+
         /* crown molding */
 
-        out += '<rect x="0" y="0" width="' + W + '" height="12" fill="url(#wood)"/>';
+        out += '<rect x="0" y="0" width="' + W + '" height="12" fill="#fbf7ee"/>';
 
         out += '<rect width="' + W + '" height="' + H + '" fill="url(#vignette)"/>';
 
@@ -572,7 +610,7 @@
 
         for (var m = 0; m < 26; m++) {
 
-            out += '<circle class="mote" cx="' + n1(rnd() * W) + '" cy="' + n1(H * 0.25 + rnd() * H * 0.7) + '" r="' + n1(1 + rnd() * 1.8) + '" fill="#ffe9a8" opacity="0" style="animation-duration:' + n1(9 + rnd() * 9) + "s;animation-delay:-" + n1(rnd() * 12) + 's"/>';
+            out += '<circle class="mote" cx="' + n1(rnd() * W) + '" cy="' + n1(H * 0.25 + rnd() * H * 0.7) + '" r="' + n1(1 + rnd() * 1.8) + '" fill="#fff6c0" opacity="0" style="animation-duration:' + n1(9 + rnd() * 9) + "s;animation-delay:-" + n1(rnd() * 12) + 's"/>';
 
         }
 
